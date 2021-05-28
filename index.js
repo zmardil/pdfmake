@@ -1,142 +1,111 @@
 const data = {
-	regNo: '',
-	indexNo: '',
-	nic: '',
-	title: 'Mr.',
-	nameWithInitials: '',
-	fullName: 'John Doe',
-	street: '',
-	city: '',
-	district: 'N/A',
-	gsDivision: 'N/A',
-	alDistrict: '',
-	phone: '',
-	email: '',
-	course: 'N/A',
-	zScore: '',
-	employed: false,
-	employment: {
-		establishment: '',
-		address: {
-			street: '',
-			city: '',
-			district: 'N/A'
-		},
-		designation: '',
-		salary: '',
-		dateOfEmployment: new Date()
-	},
-	married: false,
-	spouse: {
-		name: '',
-		//date of marriage
-		employment: {
-			establishment: '',
-			designation: '',
-			salary: '',
-			dateOfEmployment: new Date()
-		}
-	},
-	father: {
-		name: '',
-		living: true,
-		age: '',
-		employment: {
-			occupation: '',
-			salary: '',
-			dateOfEmployment: new Date(),
-			address: ''
-		},
-		annualIncome: {
-			occupationOrPension: '',
-			houseAndProperty: '',
-			otherSources: ''
-		}
-	},
-	mother: {
-		name: '',
-		living: true,
-		age: '',
-		employment: {
-			occupation: '',
-			salary: '',
-			dateOfEmployment: new Date(),
-			address: ''
-		},
-		annualIncome: {
-			occupationOrPension: '',
-			houseAndProperty: '',
-			otherSources: ''
-		}
-	},
-	guardian: {
-		name: '',
-		age: '',
-		address: '',
-		post: '',
-		annualIncome: {
-			salary: '',
-			houseAndPropertyOrTemple: ''
-		}
-	},
-	siblingsUnder19: [
+	date: new Date(),
+	installments: [
 		{
-			name: 'John Doe',
-			dob: new Date('10-30-1989'),
-			// age: ,
-			schoolOrInstitute: 'Foo Colllege'
+			course: 'Arts',
+			yearOfStudy: 1,
+			mode: 'M',
+			number: 3
 		},
 		{
-			name: 'Jane Doe',
-			dob: new Date('10-30-1989'),
-			// age: ,
-			schoolOrInstitute: 'Foo Institute'
+			course: 'FA-Art and Design',
+			yearOfStudy: 1,
+			mode: 'M',
+			number: 14
+		},
+		{
+			course: 'FA-Art and Design',
+			yearOfStudy: 2,
+			mode: 'M',
+			number: 3
+		},
+		{
+			course: 'FA-Art and Design',
+			yearOfStudy: 3,
+			mode: 'M',
+			number: 6
+		},
+		{
+			course: 'FA-Art and Design',
+			yearOfStudy: 4,
+			mode: 'M',
+			number: 5
+		},
+		{
+			course: 'FA-Baratham',
+			yearOfStudy: 1,
+			mode: 'M',
+			number: 45
+		},
+		{
+			course: 'FA-Baratham',
+			yearOfStudy: 2,
+			mode: 'M',
+			number: 2
+		},
+		{
+			course: 'FA-Baratham',
+			yearOfStudy: 3,
+			mode: 'M',
+			number: 9
+		},
+		{
+			course: 'FA-Baratham',
+			yearOfStudy: 4,
+			mode: 'M',
+			number: 15
 		}
 	]
 }
 
-const docDefinition = (({ fullName, siblingsUnder19 }) => ({
-	// header: {
-	// 	columns: ['Left part', { text: 'Right part', alignment: 'right' }]
-	// },
+const docDefinition = (({ date, installments }) => ({
+	header: [{ text: date.toDateString(), alignment: 'right' }],
 	content: [
-		// string interpolation
-		`First paragraph ${fullName}`,
-		'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines ',
+		{ text: 'UNIVERSITY OF JAFFNA, SRI LANKA', style: 'heading' },
+		{ text: 'Bursary Summary', style: 'subHeading' },
+
 		{
-			columns: [
-				{ width: 'auto', text: 'John Doe' },
-				{ width: 'auto', text: 'John Doe' }
-			],
-			columnGap: 10
-		},
-		// siblingUnder19
-		{
-			layout: 'lightHorizontalLines', // optional
+			layout: 'lightHorizontalLines',
 			table: {
-				// headers are automatically repeated if the table spans over multiple pages
-				// you can declare how many rows should be treated as headers
 				headerRows: 1,
-				widths: ['*', 'auto', 100, '*'],
+				widths: ['auto', '*', '*', '*', 'auto'],
 
 				body: [
-					['Name', 'Date of Birth', 'Age', 'School/Institute'],
-					// [ [x], [y],...] -> [x], [y], ...
-					...siblingsUnder19.map(
-						({ name, dob, schoolOrInstitute }) => [
-							name,
-							new Date(dob).toLocaleDateString(),
-							new Date().getFullYear() -
-								new Date(dob).getFullYear(),
-							schoolOrInstitute
+					['Course', 'Year of Study', 'Mode', 'Number', 'Amount'],
+					...installments.map(
+						({ course, yearOfStudy, mode, number }) => [
+							course,
+							yearOfStudy,
+							mode,
+							number,
+							number * 40000
 						]
 					)
 				]
+			},
+			layout: {
+				fillColor: function (rowIndex, node, columnIndex) {
+					return rowIndex % 2 === 0 ? '#CCCCCC' : null
+				}
 			}
 		}
 	],
 	defaultStyle: {
 		font: 'Roboto'
+	},
+	styles: {
+		heading: {
+			fontSize: 28,
+			bold: true,
+			color: 'blue',
+			alignment: 'center'
+		},
+		subHeading: {
+			fontSize: 20,
+			bold: true,
+			color: 'blue',
+			alignment: 'center'
+		}
 	}
 }))(data)
 

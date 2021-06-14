@@ -56,7 +56,7 @@ const data = {
 	mother: {
 		name: '',
 		living: true,
-		age: '',
+		age: undefined,
 		employment: {
 			occupation: '',
 			salary: '',
@@ -70,7 +70,7 @@ const data = {
 		}
 	},
 	guardian: {
-		name: '',
+		name: "Guardian's Name",
 		age: '',
 		address: '',
 		post: '',
@@ -82,20 +82,38 @@ const data = {
 	siblingsUnder19: [
 		{
 			name: 'John Doe',
-			dob: new Date('10-30-1989'),
-			// age: ,
+			// dob: new Date('10-30-1989'),
 			schoolOrInstitute: 'Foo Colllege'
 		},
 		{
 			name: 'Jane Doe',
-			dob: new Date('10-30-1989'),
-			// age: ,
+			// dob: new Date('10-30-1989'),
 			schoolOrInstitute: 'Foo Institute'
 		}
 	]
 }
 
-const docDefinition = (({ fullName, siblingsUnder19 }) => ({
+const table = (theads, data) => {
+	if (data.length > 0) {
+		return {
+			headerRows: 1,
+			widths: theads.map(({ width = 'auto' }) => width),
+			// widths: theads.map(thead => thead.width),
+			body: [
+				theads.map(({ text }) => text),
+				...data.map(x => Object.values(x))
+			]
+		}
+	}
+	return {
+		headerRows: 1,
+		// widths: theads.map(({width = 'auto'}) => width),
+		widths: theads.map(thead => thead.width),
+		body: [theads.map(({ text }) => text), theads.map(thead => 'N/A')]
+	}
+}
+
+const docDefinition = (({ fullName, guardian, mother, siblingsUnder19 }) => ({
 	// header: {
 	// 	columns: ['Left part', { text: 'Right part', alignment: 'right' }]
 	// },
@@ -103,6 +121,8 @@ const docDefinition = (({ fullName, siblingsUnder19 }) => ({
 		// string interpolation
 		`First paragraph ${fullName}`,
 		'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines ',
+		'Mother: ',
+		`${guardian.name ? guardian.name : 'N/A'}`,
 		{
 			columns: [
 				{ width: 'auto', text: 'John Doe' },
@@ -113,28 +133,24 @@ const docDefinition = (({ fullName, siblingsUnder19 }) => ({
 		// siblingUnder19
 		{
 			layout: 'lightHorizontalLines', // optional
-			table: {
-				// headers are automatically repeated if the table spans over multiple pages
-				// you can declare how many rows should be treated as headers
-				headerRows: 1,
-				widths: ['*', 'auto', 100, '*'],
-
-				body: [
-					['Name', 'Date of Birth', 'Age', 'School/Institute'],
-					// [ [x], [y],...] -> [x], [y], ...
-					...siblingsUnder19.map(
-						({ name, dob, schoolOrInstitute }) => [
-							name,
-							new Date(dob).toLocaleDateString(),
-							new Date().getFullYear() -
-								new Date(dob).getFullYear(),
-							schoolOrInstitute
-						]
-					)
-				]
-			}
+			table: table(
+				[
+					{ text: 'Name' },
+					// { text: 'Date of Birth', width: 'auto' },
+					// { text: 'Age', width: '100' },
+					{ text: 'School/Institute', width: 300 }
+				],
+				siblingsUnder19
+			)
 		}
 	],
+	styles: {
+		tableHeader: {
+			bold: true,
+			fontSize: 13,
+			color: 'black'
+		}
+	},
 	defaultStyle: {
 		font: 'Roboto'
 	}
